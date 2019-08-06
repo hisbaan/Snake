@@ -1,10 +1,3 @@
-//File: Snake.java
-//Created: 14/07/2019
-//Finished: 14/07/2019
-//Name: Hisbaan Noorani
-//
-//This program 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,7 +13,7 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
     Drawing board = new Drawing();
 
     char direction = ' ';
-    static int[][][] snake = new int[20][20][2];
+    static int[][] snake = new int[20][20];
 
     Timer movement;
 
@@ -43,6 +36,8 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
         mainMenuFrame.setLayout(new BorderLayout());
         mainMenuFrame.setResizable(false);
 
+        if (mainMenuFrame.getWindowListeners().length < 1) mainMenuFrame.addWindowListener(this);
+
         mainMenuFrame.add(mainMenuBottomPannel, BorderLayout.SOUTH);
         mainMenuBottomPannel.setLayout(new GridLayout(1, 3));
         mainMenuBottomPannel.add(startGameButton);
@@ -58,21 +53,26 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
         gameFrame.setLayout(new BorderLayout());
         gameFrame.setResizable(false);
 
+        if (gameFrame.getWindowListeners().length < 1) gameFrame.addWindowListener(this);
+
         gameFrame.add(gameBottomPannel, BorderLayout.SOUTH);
 
         gameBottomPannel.setLayout(new GridLayout(1, 3));
         gameBottomPannel.add(gameBackButton);
         if (gameBackButton.getActionListeners().length < 1) gameBackButton.addActionListener(this);
 
+        if (gameFrame.getKeyListeners().length < 1) gameFrame.addKeyListener(this);
+
+        gameFrame.setFocusable(true);
         gameFrame.add(board, BorderLayout.CENTER);
         /*
          * array that tracks the snake's movement
          * find a way to add the the end of the array
          * maybe notation of how many turns it has been and set a disappear timer
-         * 3d array (x, y and time existed)
+         * 3d array (x, y and time existed in cycles)
          * if you pick up an apple, increase the time required before disappearing.  */
 
-        snake[10][10][0] = 1;
+        snake[10][10] = 1;
 
         movement.start();
 
@@ -100,27 +100,55 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
     }
 
     public void north() {
-        for (int y = 19; y > -1; y--) {
+        for (int y = 0; y < 20; y++) {
             for (int x = 0; x < 20; x++) {
-                if (snake[x][y][0] == 1) {
-                    snake[x][y][0] = 0;
-                    snake[x][y - 1][0] = 1;
+                if (snake[x][y] > 0) {
+                    snake[x][y - 1] = 1;
+                    snake[x][y] = 0;
+
+                    System.out.println("north");
                 }
             }
         }
     }
 
     public void south() {
+        for (int y = 19; y >= 0; y--) {
+            for (int x = 0; x < 20; x++) {
+                if (snake[x][y] > 0) {
+                    snake[x][y + 1] = 1;
+                    snake[x][y] = 0;
 
+                    System.out.println("south");
+                }
+            }
+        }
     }
 
     public void east() {
+        for (int y = 0; y < 20; y++) {
+            for (int x = 19; x >= 0; x--) {
+                if (snake[x][y] > 0) {
+                    snake[x + 1][y] = 1;
+                    snake[x][y] = 0;
 
+                    System.out.println("east");
+                }
+            }
+        }
     }
 
     public void west() {
+        for (int y = 0; y < 20; y++) {
+            for (int x = 0; x < 20; x++) {
+                if (snake[x][y] > 0) {
+                    snake[x - 1][y] = 1;
+                    snake[x][y] = 0;
 
-
+                    System.out.println("west");
+                }
+            }
+        }
     }
 
     @Override
@@ -137,19 +165,17 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getSource() == gameFrame) {
-            if (e.getKeyCode() == KeyEvent.VK_UP) {
-                direction = 'n';
-            }
-            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                direction = 's';
-            }
-            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                direction = 'e';
-            }
-            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                direction = 'w';
-            }
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            direction = 'n';
+        }
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            direction = 's';
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            direction = 'e';
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            direction = 'w';
         }
     }
 
