@@ -14,7 +14,7 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
     Drawing board = new Drawing();
 
     public int length = 5;
-    char direction = ' ';
+    char direction = 'n';
     static int[][][] snake = new int[20][20][2];
     static int[][] apple = new int[20][20];
 
@@ -26,13 +26,13 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
 
     Snake() {
         movement = new Timer(100, e -> {
+            board.validate();
+            board.repaint();
             move();
             countAge();
             cleanUp();
             checkApple();
             checkSnakeCollision();
-            board.validate();
-            board.repaint();
         });
         //setup timer for movement
         mainMenu();
@@ -193,8 +193,6 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
 
                     System.out.println("north");
                 }
-
-                snake[x][y][1]++;
             }
         }
     }
@@ -311,21 +309,6 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
             }
             if (e.getKeyCode() == KeyEvent.VK_DOWN) {
                 direction = 's';
-            }
-        }
-
-        if (direction == ' ') {
-            if (e.getKeyCode() == KeyEvent.VK_UP) {
-                direction = 'n';
-            }
-            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                direction = 's';
-            }
-            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                direction = 'e';
-            }
-            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                direction = 'w';
             }
         }
     }
