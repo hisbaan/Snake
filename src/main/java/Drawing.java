@@ -19,9 +19,9 @@ public class Drawing extends JPanel {
 
         for (int y = 0; y < 20; y++) {
             for (int x = 0; x < 20; x++) {
-                if (Snake.snake[x][y] > 0) {
+                if (Snake.snake[x][y][0] > 0) {
                     g.fillRect(40 * x, 40 * y, 40, 40);
-                    System.out.println("Painted");
+//                    System.out.println("Painted");
                 }
             }
         }
