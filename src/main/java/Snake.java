@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 
 public class Snake implements ActionListener, KeyListener, WindowListener {
     JFrame mainMenuFrame = new JFrame("Main Menu");
@@ -15,6 +16,7 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
     public int length = 5;
     char direction = ' ';
     static int[][][] snake = new int[20][20][2];
+    static int[][] apple = new int[20][20];
 
     Timer movement;
 
@@ -27,6 +29,8 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
             move();
             countAge();
             cleanUp();
+            checkApple();
+            checkSnakeCollision();
             board.validate();
             board.repaint();
         });
@@ -35,6 +39,8 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
     }
 
     public void mainMenu() {
+        clearBoard();
+
         mainMenuFrame.setSize(800, 800);
         mainMenuFrame.setLayout(new BorderLayout());
         mainMenuFrame.setResizable(false);
@@ -71,6 +77,8 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
 
         snake[10][10][0] = 2;
 
+        newApple();
+
         movement.start();
 
         mainMenuFrame.setVisible(false);
@@ -92,11 +100,65 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
     public void cleanUp() {
         for (int y = 0; y < 20; y++) {
             for (int x = 0; x < 20; x++) {
-                if(snake[x][y][0] == 1 && snake[x][y][1] > length) {
+                if (snake[x][y][0] == 1 && snake[x][y][1] > length) {
                     snake[x][y][0] = 0;
                 }
             }
         }
+    }
+
+    public void checkSnakeCollision() {
+        for (int y = 0; y < 20; y++) {
+            for (int x = 0; x < 20; x++) {
+                try {
+                    if (direction == 'n') {
+                        if (snake[x][y][0] == 2 && snake[x][y - 1][0] == 1) {
+                            gameOver();
+                        }
+                    }
+                    if (direction == 's') {
+                        if (snake[x][y][0] == 2 && snake[x][y + 1][0] == 1) {
+                            gameOver();
+                        }
+                    }
+                    if (direction == 'e') {
+                        if (snake[x][y][0] == 2 && snake[x + 1][y][0] == 1) {
+                            gameOver();
+                        }
+                    }
+                    if (direction == 'w') {
+                        if (snake[x][y][0] == 2 && snake[x - 1][y][0] == 1) {
+                            gameOver();
+                        }
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+
+                }
+            }
+        }
+    }
+
+    public void checkApple() {
+        for (int y = 0; y < 20; y++) {
+            for (int x = 0; x < 20; x++) {
+                if (snake[x][y][0] == 2 && apple[x][y] == 1) {
+                    length++;
+                    newApple();
+                }
+            }
+        }
+    }
+
+    public void newApple() {
+        for (int y = 0; y < 20; y++) {
+            for (int x = 0; x < 20; x++) {
+                apple[x][y] = 0;
+            }
+        }
+
+        Random random = new Random();
+
+        apple[random.nextInt(20)][random.nextInt(20)] = 1;
     }
 
     public void move() {
@@ -176,8 +238,19 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
         }
     }
 
+    public void clearBoard() {
+        for (int y = 0; y < 20; y++) {
+            for (int x = 0; x < 20; x++) {
+                snake[x][y][0] = 0;
+            }
+        }
+
+        length = 5;
+    }
+
     public void gameOver() {
-//        JOptionPane.showMessageDialog(gameFrame, "Game Over", "Game Over", JOptionPane.PLAIN_MESSAGE, null);
+        JOptionPane.showMessageDialog(gameFrame, "Game Over\nScore: " + (length - 5), "Game Over", JOptionPane.PLAIN_MESSAGE, null);
+        mainMenu();
     }
 
     @Override
@@ -205,17 +278,55 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
-            direction = 'n';
+        if (direction == 'n') {
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                direction = 'e';
+            }
+            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                direction = 'w';
+            }
         }
-        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            direction = 's';
+
+        if (direction == 's') {
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                direction = 'e';
+            }
+            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                direction = 'w';
+            }
         }
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            direction = 'e';
+
+        if (direction == 'e') {
+            if (e.getKeyCode() == KeyEvent.VK_UP) {
+                direction = 'n';
+            }
+            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                direction = 's';
+            }
         }
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            direction = 'w';
+
+        if (direction == 'w') {
+            if (e.getKeyCode() == KeyEvent.VK_UP) {
+                direction = 'n';
+            }
+            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                direction = 's';
+            }
+        }
+
+        if (direction == ' ') {
+            if (e.getKeyCode() == KeyEvent.VK_UP) {
+                direction = 'n';
+            }
+            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                direction = 's';
+            }
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                direction = 'e';
+            }
+            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                direction = 'w';
+            }
         }
     }
 

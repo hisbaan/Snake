@@ -15,13 +15,15 @@ public class Drawing extends JPanel {
 
         g.fillRect(0, 0, 800, 800);
 
-        g.setColor(Color.white);
-
         for (int y = 0; y < 20; y++) {
             for (int x = 0; x < 20; x++) {
                 if (Snake.snake[x][y][0] > 0) {
+                    g.setColor(Color.white);
                     g.fillRect(40 * x, 40 * y, 40, 40);
-//                    System.out.println("Painted");
+                }
+                if (Snake.apple[x][y] == 1) {
+                    g.setColor(Color.red);
+                    g.fillRect(40 * x, 40 * y, 40, 40);
                 }
             }
         }
