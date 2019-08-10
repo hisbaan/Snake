@@ -244,6 +244,7 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
         }
 
         length = 5;
+        direction = 'n';
     }
 
     public void gameOver() {
