@@ -19,11 +19,11 @@ public class Drawing extends JPanel {
             for (int x = 0; x < 20; x++) {
                 if (Snake.snake[x][y][0] > 0) {
                     g.setColor(Color.white);
-                    g.fillRect(40 * x, 40 * y, 40, 40);
+                    g.fillRect(40 * x + 2, 40 * y + 2, 36, 36);
                 }
                 if (Snake.apple[x][y] == 1) {
                     g.setColor(Color.red);
-                    g.fillRect(40 * x, 40 * y, 40, 40);
+                    g.fillRect(40 * x + 2, 40 * y + 2, 36, 36);
                 }
             }
         }
