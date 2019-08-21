@@ -141,7 +141,7 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
     public void checkApple() {
         for (int y = 0; y < 20; y++) {
             for (int x = 0; x < 20; x++) {
-                if (snake[x][y][0] == 2 && apple[x][y] == 1) {
+                if ((snake[x][y][0] == 2 || snake[x][y][0] == 1) && apple[x][y] == 1) {
                     length++;
                     newApple();
                 }
@@ -258,13 +258,7 @@ public class Snake implements ActionListener, KeyListener, WindowListener {
             startGame();
         }
         if (e.getSource() == gameBackButton) {
-            for (int y = 0; y < 20; y++) {
-                for (int x = 0; x < 20; x++) {
-                    snake[x][y][0] = 0;
-                }
-            }
-
-            gameFrame.dispose();
+            clearBoard();
             movement.stop();
             mainMenu();
         }
